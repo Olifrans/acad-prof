@@ -1,13 +1,1878 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+<meta name="description" content="GYM PRO ELITE - Sistema Premium de Gestão de Academias">
+<meta name="theme-color" content="#00ff88">
+<title>GYM PRO ELITE | Sistema Premium de Gestão de Academia</title>
+
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: radial-gradient(ellipse at top, #0a0f2a, #050510);
+    color: #ffffff;
+    min-height: 100vh;
+    padding-bottom: 85px;
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+}
+
+body.light-mode {
+    background: linear-gradient(ellipse at top, #f0f4ff, #ffffff);
+    color: #1a1a2e;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body.light-mode::before {
+    background: radial-gradient(circle at 20% 50%, rgba(0, 200, 100, 0.05) 0%, transparent 50%);
+}
+
+/* Glassmorphism Header */
+header {
+    background: rgba(5, 10, 30, 0.85);
+    backdrop-filter: blur(20px);
+    padding: 16px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+body.light-mode header {
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom-color: rgba(0, 200, 100, 0.3);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.logo-icon {
+    width: 45px; height: 45px;
+    background: linear-gradient(135deg, #00ff88, #00cc6a);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+}
+
+.logo-icon i { font-size: 1.6rem; color: #0a0f2a; }
+
+.logo h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff, #00ff88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+}
+
+.logo-badge {
+    background: rgba(0, 255, 136, 0.2);
+    padding: 4px 12px;
+    border-radius: 40px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #00ff88;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Premium Cards */
+.card {
+    background: rgba(15, 25, 45, 0.65);
+    backdrop-filter: blur(16px);
+    border-radius: 32px;
+    padding: 22px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(0, 255, 136, 0.15);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+body.light-mode .card {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(0, 200, 100, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 255, 136, 0.5);
+    box-shadow: 0 20px 40px rgba(0, 255, 136, 0.15);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #00ff88;
+    letter-spacing: -0.3px;
+}
+
+body.light-mode .card h3 { color: #00aa55; }
+
+.card h3 i {
+    font-size: 1.3rem;
+    background: rgba(0, 255, 136, 0.2);
+    padding: 8px;
+    border-radius: 14px;
+}
+
+/* Stats Grid Premium */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.08), rgba(0, 255, 136, 0.02));
+    border-radius: 24px;
+    padding: 18px 12px;
+    text-align: center;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+body.light-mode .stat-card {
+    background: linear-gradient(135deg, rgba(0, 200, 100, 0.1), rgba(0, 200, 100, 0.03));
+    border-color: rgba(0, 200, 100, 0.3);
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.stat-card:hover::before { left: 100%; }
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #00ff88, #88ffaa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+}
+
+body.light-mode .stat-value {
+    background: linear-gradient(135deg, #00aa55, #00cc77);
+    -webkit-background-clip: text;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin-top: 6px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* Form Elements Premium */
+input, select, textarea {
+    width: 100%;
+    padding: 14px 18px;
+    margin: 8px 0;
+    background: rgba(10, 15, 35, 0.8);
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    color: #fff;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    font-family: inherit;
+}
+
+body.light-mode input, 
+body.light-mode select {
+    background: rgba(240, 244, 255, 0.9);
+    color: #1a1a2e;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #00ff88;
+    box-shadow: 0 0 0 4px rgba(0, 255, 136, 0.15);
+    background: rgba(10, 15, 35, 1);
+}
+
+body.light-mode input:focus,
+body.light-mode select:focus {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 0 4px rgba(0, 200, 100, 0.2);
+}
+
+/* Buttons Premium */
+button {
+    width: 100%;
+    padding: 14px 18px;
+    margin: 8px 0;
+    background: linear-gradient(135deg, #00ff88, #00cc6a);
+    border: none;
+    border-radius: 28px;
+    color: #0a0f2a;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+button:active::before { width: 300px; height: 300px; }
+button:active { transform: scale(0.97); }
+
+/* Navigation Premium */
+.nav-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    max-width: 700px;
+    margin: 0 auto;
+    background: rgba(5, 10, 30, 0.95);
+    backdrop-filter: blur(20px);
+    display: flex;
+    border-top: 1px solid rgba(0, 255, 136, 0.2);
+    border-radius: 32px 32px 0 0;
+    z-index: 200;
+    padding: 8px 12px;
+    gap: 4px;
+}
+
+body.light-mode .nav-bar {
+    background: rgba(255, 255, 255, 0.95);
+    border-top-color: rgba(0, 200, 100, 0.3);
+}
+
+.nav-item {
+    flex: 1;
+    background: transparent;
+    margin: 0;
+    border-radius: 28px;
+    padding: 12px 0;
+    flex-direction: column;
+    gap: 5px;
+    color: #6b7280;
+    transition: all 0.3s;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+body.light-mode .nav-item { color: #64748b; }
+
+.nav-item i { font-size: 1.3rem; margin: 0; }
+.nav-item span { font-size: 0.65rem; }
+
+.nav-item.active {
+    color: #00ff88;
+    background: rgba(0, 255, 136, 0.15);
+    transform: translateY(-2px);
+}
+
+body.light-mode .nav-item.active {
+    color: #00aa55;
+    background: rgba(0, 200, 100, 0.15);
+}
+
+/* List Items Premium */
+.list-item {
+    background: rgba(10, 15, 35, 0.6);
+    margin: 12px 0;
+    padding: 16px;
+    border-radius: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(0, 255, 136, 0.15);
+    transition: all 0.3s;
+}
+
+body.light-mode .list-item {
+    background: rgba(240, 244, 255, 0.7);
+    border-color: rgba(0, 200, 100, 0.2);
+}
+
+.list-item:hover {
+    background: rgba(0, 255, 136, 0.08);
+    transform: translateX(6px);
+    border-color: rgba(0, 255, 136, 0.4);
+}
+
+.item-info { flex: 1; }
+
+.item-name {
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 1rem;
+}
+
+.status-badge {
+    font-size: 0.65rem;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.status-ativo { 
+    background: linear-gradient(135deg, #00ff88, #00cc6a);
+    color: #0a0f2a;
+    box-shadow: 0 2px 8px rgba(0, 255, 136, 0.3);
+}
+
+.status-inativo, .status-inadimplente { 
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.item-detail {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin-top: 6px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.delete-btn {
+    background: rgba(239, 68, 68, 0.15);
+    padding: 8px 16px;
+    width: auto;
+    margin: 0;
+    border-radius: 30px;
+    color: #ef4444;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.delete-btn:hover {
+    background: #ef4444;
+    color: white;
+}
+
+/* Alert Cards Premium */
+.alert-card {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95));
+    backdrop-filter: blur(8px);
+    padding: 14px 18px;
+    border-radius: 24px;
+    margin: 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    animation: slideInRight 0.4s ease;
+    border-left: 4px solid #ffaa00;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.95), rgba(234, 88, 12, 0.95));
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Charts Premium */
+canvas {
+    max-height: 240px;
+    margin-top: 16px;
+    background: rgba(10, 15, 35, 0.4);
+    border-radius: 24px;
+    padding: 12px;
+}
+
+body.light-mode canvas {
+    background: rgba(240, 244, 255, 0.6);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    opacity: 0.6;
+}
+
+.empty-state i {
+    font-size: 3.5rem;
+    margin-bottom: 16px;
+    color: #00ff88;
+    opacity: 0.5;
+}
+
+/* Result Card */
+.result-card {
+    background: linear-gradient(135deg, #00ff88, #00cc6a);
+    padding: 14px 18px;
+    border-radius: 24px;
+    margin-top: 16px;
+    text-align: center;
+    font-weight: 700;
+    color: #0a0f2a;
+}
+
+/* Tip Card */
+.tip-card {
+    background: rgba(0, 255, 136, 0.08);
+    border-left: 3px solid #00ff88;
+    padding: 14px 16px;
+    border-radius: 20px;
+    margin: 12px 0;
+}
+
+body.light-mode .tip-card {
+    background: rgba(0, 200, 100, 0.08);
+    border-left-color: #00aa55;
+}
+
+/* Financial Row */
+.financial-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.light-mode .financial-row {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+.financial-row:last-child { border-bottom: none; }
+
+/* Section Animation */
+.section {
+    display: none;
+    animation: fadeInUp 0.4s ease;
+}
+
+.section.active { display: block; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Check-in Button */
+.checkin-btn {
+    background: rgba(0, 255, 136, 0.2);
+    color: #00ff88;
+    margin: 0;
+    padding: 6px 14px;
+    width: auto;
+    border-radius: 30px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: #00ff88; border-radius: 10px; }
+
+body.light-mode ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+body.light-mode ::-webkit-scrollbar-thumb { background: #00aa55; }
+
+/* Responsive */
+@media (max-width: 600px) {
+    .stats-grid { gap: 10px; }
+    .stat-value { font-size: 1.6rem; }
+    .card { padding: 18px; }
+    .nav-bar { padding: 6px 8px; }
+    .nav-item { padding: 8px 0; }
+    .nav-item i { font-size: 1.1rem; }
+}
+
+/* Gradient Text */
+.gradient-text {
+    background: linear-gradient(135deg, #00ff88, #88ffaa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Metric Badge */
+.metric-badge {
+    background: rgba(0, 255, 136, 0.15);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Header Actions */
+.header-actions {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    gap: 8px;
+    z-index: 300;
+}
+
+.header-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(0, 255, 136, 0.2);
+    border: none;
+    color: #00ff88;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.header-btn:hover {
+    background: rgba(0, 255, 136, 0.4);
+    transform: scale(1.05);
+}
+
+body.light-mode .header-btn {
+    background: rgba(0, 200, 100, 0.2);
+    color: #00aa55;
+}
+
+body.light-mode .header-btn:hover {
+    background: rgba(0, 200, 100, 0.4);
+}
+
+/* Search Input */
+.search-input {
+    margin: 12px 0 !important;
+    background: rgba(10, 15, 35, 0.9) !important;
+}
+
+body.light-mode .search-input {
+    background: rgba(240, 244, 255, 0.95) !important;
+}
+
+/* User Badge */
+.user-badge {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    background: rgba(0, 255, 136, 0.2);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #00ff88;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body.light-mode .user-badge {
+    background: rgba(0, 200, 100, 0.2);
+    color: #00aa55;
+}
+
+/* Version Badge */
+.version-badge {
+    font-size: 0.65rem;
+    opacity: 0.6;
+    margin-left: 8px;
+}
+
+/* CPF Mask Helper */
+.cpf-hint {
+    font-size: 0.7rem;
+    opacity: 0.6;
+    margin-top: -4px;
+    margin-bottom: 8px;
+}
+
+/* Loading State */
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    opacity: 0.7;
+}
+
+.loading i { animation: spin 1s linear infinite; }
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Print Styles */
+@media print {
+    .nav-bar, .header-actions, button { display: none !important; }
+    body { background: white !important; color: black !important; padding: 0 !important; }
+    .card { box-shadow: none !important; border: 1px solid #ccc !important; }
+}
+</style>
 </head>
 <body>
 
-    <h1>Teste</h1>
+<!-- Header Actions -->
+<div class="header-actions">
+    <button class="header-btn" onclick="alternarTema()" title="Alternar Tema" id="btnTema">
+        <i class="fas fa-moon"></i>
+    </button>
+    <button class="header-btn" onclick="mostrarAjuda()" title="Ajuda">
+        <i class="fas fa-question"></i>
+    </button>
+    <button class="header-btn" onclick="fazerBackup()" title="Backup">
+        <i class="fas fa-download"></i>
+    </button>
+    <button class="header-btn admin-only" onclick="exportarRelatorioPDF()" title="Exportar PDF">
+        <i class="fas fa-file-pdf"></i>
+    </button>
+</div>
+
+<!-- User Badge -->
+<div class="user-badge" id="userBadge" style="display: none;">
+    <i class="fas fa-user"></i>
+    <span id="userName">Guest</span>
+</div>
+
+<header>
+    <div class="logo">
+        <div class="logo-icon">
+            <i class="fas fa-dumbbell"></i>
+        </div>
+        <h1>GYM PRO ELITE <span class="version-badge">v2.1</span></h1>
+        <span class="logo-badge">BUSINESS</span>
+    </div>
+</header>
+
+<div class="container">
+    <!-- DASHBOARD HOME -->
+    <div id="homeSection" class="section active">
+        <div id="alertContainer"></div>
+        
+        <!-- Stats Cards Premium -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalAlunos">0</div>
+                <div class="stat-label">TOTAL ALUNOS</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="alunosAtivos">0</div>
+                <div class="stat-label">ATIVOS</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="inadimplentes">0</div>
+                <div class="stat-label">INADIMPLENTES</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="receitaMes">R$ 0</div>
+                <div class="stat-label">RECEITA MENSAL</div>
+            </div>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-chart-line"></i> Frequência Semanal</h3>
+                <span class="metric-badge"><i class="fas fa-calendar"></i> Check-ins</span>
+            </div>
+            <canvas id="chartCheckins"></canvas>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-chart-pie"></i> Distribuição de Planos</h3>
+                <span class="metric-badge"><i class="fas fa-tag"></i> Por tipo</span>
+            </div>
+            <canvas id="chartPlanos"></canvas>
+        </div>
+        
+        <!-- Quick Tip -->
+        <div class="tip-card">
+            <i class="fas fa-gem" style="color:#00ff88; margin-right: 10px;"></i>
+            <strong>DICA ESTRATÉGICA:</strong> Mantenha a taxa de retenção acima de 75% para garantir crescimento sustentável.
+        </div>
+    </div>
+
+    <!-- ALUNOS SECTION -->
+    <div id="alunosSection" class="section">
+        <div class="card">
+            <h3><i class="fas fa-user-plus"></i> Novo Aluno</h3>
+            <input type="text" id="nomeAluno" placeholder="Nome completo">
+            <input type="text" id="cpfAluno" placeholder="CPF (apenas 11 números)" maxlength="11" oninput="mascararCPF(this)">
+            <div class="cpf-hint">💡 Digite apenas números: 12345678901</div>
+            <input type="text" id="contatoAluno" placeholder="Telefone / Email">
+            <select id="planoAluno">
+                <option value="30">📆 Mensal (30 dias - R$ 120)</option>
+                <option value="90">📅 Trimestral (90 dias - R$ 320)</option>
+                <option value="365">⭐ Anual (365 dias - R$ 1.200)</option>
+            </select>
+            <select id="pagamentoTipo">
+                <option value="dinheiro">💵 Dinheiro</option>
+                <option value="cartao">💳 Cartão</option>
+                <option value="pix">📱 Pix</option>
+            </select>
+            <button onclick="cadastrarAluno()"><i class="fas fa-save"></i> Cadastrar Aluno</button>
+        </div>
+        
+        <!-- Search -->
+        <input type="text" id="buscaAluno" class="search-input" placeholder="🔍 Buscar aluno por nome ou CPF..." oninput="filtrarAlunos(this.value)">
+        
+        <div class="card">
+            <h3><i class="fas fa-users"></i> Lista de Alunos</h3>
+            <div id="listaAlunosContainer"></div>
+        </div>
+    </div>
+
+    <!-- CHECK-IN SECTION -->
+    <div id="checkinSection" class="section">
+        <div class="card">
+            <h3><i class="fas fa-fingerprint"></i> Check-in / Acesso</h3>
+            <select id="selectCheckinAluno"></select>
+            <button onclick="realizarCheckin()"><i class="fas fa-check-circle"></i> Registrar Entrada</button>
+            <div id="ultimosCheckins"></div>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-chart-bar"></i> Frequência Hoje</h3>
+            <div id="frequenciaHoje" class="result-card"></div>
+        </div>
+    </div>
+
+    <!-- TREINOS SECTION -->
+    <div id="treinosSection" class="section">
+        <div class="card">
+            <h3><i class="fas fa-clipboard-list"></i> Ficha de Treino (A/B/C)</h3>
+            <select id="selectAlunoTreino"></select>
+            <select id="tipoTreino">
+                <option value="A">🔥 TREINO A (Superior)</option>
+                <option value="B">💪 TREINO B (Inferior)</option>
+                <option value="C">⚡ TREINO C (Full Body)</option>
+            </select>
+            <input type="text" id="descTreino" placeholder="Ex: Supino, Rosca, Tríceps, Agachamento">
+            <button onclick="salvarTreino()"><i class="fas fa-dumbbell"></i> Atribuir Treino</button>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-history"></i> Histórico de Treinos</h3>
+            <div id="listaTreinosContainer"></div>
+        </div>
+    </div>
+
+    <!-- MÉTRICAS SECTION -->
+    <div id="metricasSection" class="section">
+        <div class="card">
+            <h3><i class="fas fa-heartbeat"></i> Avaliação Física</h3>
+            <select id="selectAlunoMetrica" onchange="atualizarGraficoEvolucao()"></select>
+            <input type="number" id="pesoAluno" step="0.1" placeholder="Peso (kg)">
+            <input type="number" id="alturaAluno" step="0.01" placeholder="Altura (m)">
+            <input type="number" id="gorduraAluno" step="0.1" placeholder="% Gordura">
+            <button onclick="salvarMetrica()"><i class="fas fa-chart-line"></i> Salvar Avaliação</button>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-chart-line"></i> Evolução do Peso</h3>
+            <canvas id="graficoEvolucao"></canvas>
+            <div id="imcInfo" class="result-card"></div>
+        </div>
+    </div>
+
+    <!-- FINANCEIRO SECTION -->
+    <div id="financeiroSection" class="section">
+        <div class="card">
+            <h3><i class="fas fa-chart-simple"></i> Relatório Financeiro</h3>
+            <div id="relatorioFinanceiro"></div>
+            <button onclick="gerarRelatorioFinanceiro()"><i class="fas fa-chart-line"></i> Atualizar Relatório</button>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-history"></i> Histórico de Pagamentos</h3>
+            <div id="historicoPagamentos"></div>
+        </div>
+    </div>
+
+    <!-- PROFISSIONAL SECTION -->
+    <div id="profissionalSection" class="section">
+        <div class="card">
+            <h3><i class="fas fa-user-md"></i> Responsável Técnico (CREF)</h3>
+            <input type="text" id="profissionalNome" placeholder="Nome do Profissional">
+            <input type="text" id="profissionalCref" placeholder="Número do CREF">
+            <button onclick="salvarProfissional()"><i class="fas fa-save"></i> Registrar Responsável</button>
+            <div id="infoProfissional" class="tip-card" style="margin-top: 15px;"></div>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-shield-alt"></i> Regras de Negócio</h3>
+            <div class="tip-card">✅ Aluno só acessa com plano ativo</div>
+            <div class="tip-card">✅ CPF único por aluno (validado)</div>
+            <div class="tip-card">✅ Bloqueio automático após vencimento</div>
+            <div class="tip-card">✅ Check-in diário registrado</div>
+            <div class="tip-card">✅ Apenas profissionais CREF podem prescrever treinos</div>
+            <div class="tip-card" style="margin-top:10px; background:rgba(239,68,68,0.1); border-left-color:#ef4444;">
+                ⚠️ <strong>Atenção:</strong> Dados armazenados localmente. Faça backup regularmente!
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="nav-bar">
+    <button class="nav-item active" onclick="mudarTela('home')" data-tela="home"><i class="fas fa-home"></i><span>Início</span></button>
+    <button class="nav-item" onclick="mudarTela('alunos')" data-tela="alunos"><i class="fas fa-users"></i><span>Alunos</span></button>
+    <button class="nav-item" onclick="mudarTela('checkin')" data-tela="checkin"><i class="fas fa-fingerprint"></i><span>Check-in</span></button>
+    <button class="nav-item" onclick="mudarTela('treinos')" data-tela="treinos"><i class="fas fa-dumbbell"></i><span>Treinos</span></button>
+    <button class="nav-item" onclick="mudarTela('metricas')" data-tela="metricas"><i class="fas fa-chart-line"></i><span>Métricas</span></button>
+    <button class="nav-item" onclick="mudarTela('financeiro')" data-tela="financeiro"><i class="fas fa-coins"></i><span>Financeiro</span></button>
+    <button class="nav-item admin-only" onclick="mudarTela('profissional')" data-tela="profissional"><i class="fas fa-id-card"></i><span>CREF</span></button>
+</div>
+
+<script>
+// ==================== CONFIGURAÇÃO GERAL ====================
+const APP = {
+    version: '2.1.0',
+    name: 'GYM PRO ELITE',
+    storage: {
+        get: (key) => {
+            try {
+                const data = localStorage.getItem(`gym_${key}`);
+                return data ? JSON.parse(atob(data)) : null;
+            } catch { return null; }
+        },
+        set: (key, value) => {
+            try {
+                localStorage.setItem(`gym_${key}`, btoa(JSON.stringify(value)));
+                return true;
+            } catch { return false; }
+        }
+    }
+};
+
+// ==================== DADOS GLOBAIS ====================
+let alunos = APP.storage.get('alunos_v2') || [];
+let treinos = APP.storage.get('treinos_v2') || [];
+let metricas = APP.storage.get('metricas_v2') || [];
+let checkins = APP.storage.get('checkins_v2') || [];
+let pagamentos = APP.storage.get('pagamentos_v2') || [];
+let profissional = APP.storage.get('profissional') || { nome: "", cref: "" };
+let usuarioLogado = JSON.parse(localStorage.getItem('gym_usuario')) || null;
+
+const precosPlanos = { 30: 120, 90: 320, 365: 1200 };
+let charts = {};
+
+// ==================== UTILITÁRIOS ====================
+function salvarDados() {
+    APP.storage.set('alunos_v2', alunos);
+    APP.storage.set('treinos_v2', treinos);
+    APP.storage.set('metricas_v2', metricas);
+    APP.storage.set('checkins_v2', checkins);
+    APP.storage.set('pagamentos_v2', pagamentos);
+}
+
+// Validação de CPF com dígitos verificadores
+function validarCPF(cpf) {
+    cpf = cpf.replace(/\D/g, '');
+    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
     
+    let soma = 0, resto;
+    for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.substring(9, 10))) return false;
+    
+    soma = 0;
+    for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i-1, i)) * (12 - i);
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    return resto === parseInt(cpf.substring(10, 11));
+}
+
+// Máscara visual para CPF (apenas display)
+function mascararCPF(input) {
+    let valor = input.value.replace(/\D/g, '').slice(0, 11);
+    input.value = valor;
+}
+
+// Parse de data seguro (evita problemas de timezone)
+function parseDateSafe(dateString) {
+    if (!dateString) return new Date();
+    const [year, month, day] = dateString.split('T')[0].split('-');
+    return new Date(Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day)));
+}
+
+// Status do aluno
+function getAlunoStatus(aluno) {
+    const hoje = new Date();
+    hoje.setUTCHours(0,0,0,0);
+    const venc = parseDateSafe(aluno.vencimento);
+    return venc < hoje ? "INADIMPLENTE" : "ATIVO";
+}
+
+// Verifica se aluno pode acessar
+function alunoPodeAcessar(aluno) {
+    return getAlunoStatus(aluno) === "ATIVO";
+}
+
+// Debounce para performance
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Limpar dados antigos (checkins > 90 dias)
+function limparDadosAntigos() {
+    const diasRetencao = 90;
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - diasRetencao);
+    const antes = checkins.length;
+    checkins = checkins.filter(c => new Date(c.data) > cutoff);
+    if (antes !== checkins.length) salvarDados();
+}
+
+// ==================== ALUNOS ====================
+function cadastrarAluno() {
+    let nome = document.getElementById("nomeAluno").value.trim();
+    let cpf = document.getElementById("cpfAluno").value.replace(/\D/g, '');
+    let contato = document.getElementById("contatoAluno").value.trim();
+    let planoMeses = parseInt(document.getElementById("planoAluno").value);
+    let pagamentoTipo = document.getElementById("pagamentoTipo").value;
+    
+    if (!nome || !cpf || !contato) {
+        Swal.fire("Atenção", "Preencha nome, CPF e contato", "warning");
+        return;
+    }
+    
+    if (!validarCPF(cpf)) {
+        Swal.fire("CPF Inválido", "Verifique os dígitos do CPF", "error");
+        return;
+    }
+    
+    if (alunos.some(a => a.cpf === cpf)) {
+        Swal.fire("CPF já cadastrado", "Este CPF já está registrado no sistema", "error");
+        return;
+    }
+    
+    let vencimento = new Date();
+    vencimento.setDate(vencimento.getDate() + planoMeses);
+    let valor = precosPlanos[planoMeses];
+    
+    let novoAluno = {
+        id: Date.now(),
+        nome: nome,
+        cpf: cpf,
+        contato: contato,
+        vencimento: vencimento.toISOString(),
+        dataCadastro: new Date().toISOString(),
+        plano: planoMeses,
+        valorMensalidade: valor,
+        status: "ATIVO"
+    };
+    
+    alunos.push(novoAluno);
+    
+    pagamentos.push({
+        id: Date.now(),
+        alunoId: novoAluno.id,
+        alunoNome: nome,
+        valor: valor,
+        tipo: pagamentoTipo,
+        data: new Date().toISOString(),
+        periodo: `${planoMeses} dias`
+    });
+    
+    salvarDados();
+    document.getElementById("nomeAluno").value = "";
+    document.getElementById("cpfAluno").value = "";
+    document.getElementById("contatoAluno").value = "";
+    
+    Swal.fire("Sucesso!", `${nome} cadastrado com sucesso!`, "success");
+    renderizarTudo();
+}
+
+function deletarAluno(id) {
+    Swal.fire({
+        title: 'Excluir Aluno?',
+        text: 'Todos os dados relacionados serão removidos!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        confirmButtonText: 'Sim, excluir'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            alunos = alunos.filter(a => a.id !== id);
+            treinos = treinos.filter(t => t.alunoId !== id);
+            metricas = metricas.filter(m => m.alunoId !== id);
+            checkins = checkins.filter(c => c.alunoId !== id);
+            salvarDados();
+            Swal.fire('Excluído!', 'Aluno removido.', 'success');
+            renderizarTudo();
+        }
+    });
+}
+
+function renovarPlano(alunoId) {
+    Swal.fire({
+        title: 'Renovar Plano',
+        text: 'Confirme a renovação por mais 30 dias (R$ 120)',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Renovar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let aluno = alunos.find(a => a.id === alunoId);
+            if (aluno) {
+                let novoVenc = new Date(aluno.vencimento);
+                if (novoVenc < new Date()) novoVenc = new Date();
+                novoVenc.setDate(novoVenc.getDate() + 30);
+                aluno.vencimento = novoVenc.toISOString();
+                
+                pagamentos.push({
+                    id: Date.now(),
+                    alunoId: aluno.id,
+                    alunoNome: aluno.nome,
+                    valor: 120,
+                    tipo: "renovacao",
+                    data: new Date().toISOString(),
+                    periodo: "30 dias"
+                });
+                
+                salvarDados();
+                Swal.fire("Renovado!", `Plano de ${aluno.nome} renovado.`, "success");
+                renderizarTudo();
+            }
+        }
+    });
+}
+
+function renderizarAlunos(lista = null) {
+    const alunosParaRender = lista || alunos;
+    let container = document.getElementById("listaAlunosContainer");
+    
+    if (alunosParaRender.length === 0) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-user-slash"></i><br>${lista ? 'Nenhum resultado encontrado' : 'Nenhum aluno cadastrado'}</div>`;
+        return;
+    }
+    
+    container.innerHTML = alunosParaRender.map(aluno => {
+        let status = getAlunoStatus(aluno);
+        let venc = parseDateSafe(aluno.vencimento);
+        let statusClass = status === "ATIVO" ? "status-ativo" : "status-inadimplente";
+        let statusText = status === "ATIVO" ? "✅ Ativo" : "⚠️ Inadimplente";
+        
+        return `
+            <div class="list-item">
+                <div class="item-info">
+                    <div class="item-name">
+                        <i class="fas fa-user"></i> ${aluno.nome}
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="item-detail">
+                        <span>📄 CPF: ${aluno.cpf.substring(0,3)}.***.***-${aluno.cpf.substring(9)}</span>
+                        <span>📅 Venc: ${venc.toLocaleDateString('pt-BR')}</span>
+                        <span>💰 R$ ${aluno.valorMensalidade.toFixed(2)}</span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    ${status === "INADIMPLENTE" ? `<button class="delete-btn" style="background:#f97316; color:white;" onclick="renovarPlano(${aluno.id})"><i class="fas fa-sync"></i> Renovar</button>` : ''}
+                    <button class="delete-btn" onclick="deletarAluno(${aluno.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        `;
+    }).join("");
+}
+
+// Busca em tempo real com debounce
+const filtrarAlunos = debounce((termo) => {
+    termo = termo.toLowerCase().trim();
+    if (!termo) {
+        renderizarAlunos();
+        return;
+    }
+    
+    const filtrados = alunos.filter(a => 
+        a.nome.toLowerCase().includes(termo) || 
+        a.cpf.includes(termo) ||
+        a.contato.toLowerCase().includes(termo)
+    );
+    
+    renderizarAlunos(filtrados);
+}, 300);
+
+// ==================== CHECK-IN ====================
+function realizarCheckin() {
+    let nomeAluno = document.getElementById("selectCheckinAluno").value;
+    if (!nomeAluno) { Swal.fire("Erro", "Selecione um aluno", "error"); return; }
+    let aluno = alunos.find(a => a.nome === nomeAluno);
+    if (!aluno) return;
+    
+    if (!alunoPodeAcessar(aluno)) {
+        Swal.fire("Acesso Bloqueado", `${aluno.nome} está com plano vencido!`, "error");
+        return;
+    }
+    
+    let hoje = new Date().toDateString();
+    let jaCheckinHoje = checkins.some(c => c.alunoId === aluno.id && new Date(c.data).toDateString() === hoje);
+    if (jaCheckinHoje) {
+        Swal.fire("Check-in já realizado", `${aluno.nome} já registrou entrada hoje!`, "info");
+        return;
+    }
+    
+    checkins.push({
+        id: Date.now(),
+        alunoId: aluno.id,
+        alunoNome: aluno.nome,
+        data: new Date().toISOString(),
+        hora: new Date().toLocaleTimeString('pt-BR')
+    });
+    
+    salvarDados();
+    
+    // Notificação browser
+    if (Notification.permission === 'granted') {
+        new Notification('✅ Check-in Realizado', {
+            body: `${aluno.nome} - Entrada registrada`,
+            icon: 'https://via.placeholder.com/128/00ff88/0a0f2a?text=OK'
+        });
+    }
+    
+    Swal.fire("Check-in realizado!", `Entrada registrada às ${new Date().toLocaleTimeString('pt-BR')}`, "success");
+    renderizarTudo();
+}
+
+function renderizarCheckins() {
+    let hoje = new Date().toDateString();
+    let checkinsHoje = checkins.filter(c => new Date(c.data).toDateString() === hoje);
+    document.getElementById("frequenciaHoje").innerHTML = `<i class="fas fa-calendar-check"></i> Hoje: ${checkinsHoje.length} check-ins realizados`;
+    
+    let ultimos = [...checkins].reverse().slice(0, 5);
+    let container = document.getElementById("ultimosCheckins");
+    if (ultimos.length === 0) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-clock"></i><br>Nenhum check-in hoje</div>`;
+    } else {
+        container.innerHTML = ultimos.map(c => `<div class="tip-card"><i class="fas fa-check-circle" style="color:#00ff88"></i> ${c.alunoNome} - ${new Date(c.data).toLocaleTimeString('pt-BR')}</div>`).join("");
+    }
+}
+
+// ==================== TREINOS ====================
+function salvarTreino() {
+    if (!profissional.nome || !profissional.cref) {
+        Swal.fire("Atenção", "É necessário registrar um profissional CREF para prescrever treinos!", "warning");
+        return;
+    }
+    
+    let nomeAluno = document.getElementById("selectAlunoTreino").value;
+    if (!nomeAluno) { Swal.fire("Erro", "Selecione um aluno", "error"); return; }
+    let aluno = alunos.find(a => a.nome === nomeAluno);
+    if (!aluno) return;
+    
+    let tipo = document.getElementById("tipoTreino").value;
+    let desc = document.getElementById("descTreino").value.trim();
+    if (!desc) { Swal.fire("Atenção", "Descreva os exercícios", "info"); return; }
+    
+    treinos.push({
+        id: Date.now(),
+        alunoId: aluno.id,
+        alunoNome: aluno.nome,
+        tipo,
+        descricao: desc,
+        data: new Date().toISOString(),
+        profissional: profissional.nome,
+        cref: profissional.cref
+    });
+    
+    salvarDados();
+    document.getElementById("descTreino").value = "";
+    Swal.fire("Treino Salvo!", `Treino ${tipo} prescrito por ${profissional.nome}`, "success");
+    renderizarTudo();
+}
+
+function deletarTreino(id) {
+    treinos = treinos.filter(t => t.id !== id);
+    salvarDados();
+    renderizarTudo();
+}
+
+function renderizarTreinos() {
+    let container = document.getElementById("listaTreinosContainer");
+    if (treinos.length === 0) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-clipboard"></i><br>Nenhum treino registrado</div>`;
+        return;
+    }
+    container.innerHTML = [...treinos].reverse().map(t => `
+        <div class="list-item">
+            <div class="item-info">
+                <div class="item-name"><i class="fas fa-dumbbell"></i> ${t.alunoNome} - Treino ${t.tipo}</div>
+                <div class="item-detail">📝 ${t.descricao.substring(0, 50)}${t.descricao.length > 50 ? '...' : ''}</div>
+                <div class="item-detail">👨‍🏫 Prof: ${t.profissional || 'N/A'} (CREF: ${t.cref || 'N/A'})</div>
+            </div>
+            <button class="delete-btn" onclick="deletarTreino(${t.id})"><i class="fas fa-trash"></i></button>
+        </div>
+    `).join("");
+}
+
+// ==================== MÉTRICAS ====================
+function salvarMetrica() {
+    let nomeAluno = document.getElementById("selectAlunoMetrica").value;
+    if (!nomeAluno) { Swal.fire("Erro", "Selecione um aluno", "error"); return; }
+    let aluno = alunos.find(a => a.nome === nomeAluno);
+    if (!aluno) return;
+    
+    let peso = parseFloat(document.getElementById("pesoAluno").value);
+    let altura = parseFloat(document.getElementById("alturaAluno").value);
+    let gordura = document.getElementById("gorduraAluno").value;
+    if (isNaN(peso) || isNaN(altura)) { Swal.fire("Atenção", "Preencha peso e altura", "warning"); return; }
+    
+    let imc = peso / (altura * altura);
+    let classificacao = imc < 18.5 ? "Abaixo do peso" : imc < 25 ? "Peso normal" : imc < 30 ? "Sobrepeso" : "Obesidade";
+    
+    metricas.push({
+        id: Date.now(),
+        alunoId: aluno.id,
+        alunoNome: aluno.nome,
+        peso, altura,
+        gordura: gordura ? parseFloat(gordura) : null,
+        imc: imc.toFixed(1),
+        classificacao,
+        data: new Date().toISOString()
+    });
+    
+    salvarDados();
+    document.getElementById("pesoAluno").value = "";
+    document.getElementById("alturaAluno").value = "";
+    document.getElementById("gorduraAluno").value = "";
+    Swal.fire("Avaliação Salva!", `IMC: ${imc.toFixed(1)} - ${classificacao}`, "success");
+    renderizarTudo();
+}
+
+// ==================== DASHBOARD ====================
+function atualizarDashboard() {
+    let ativos = alunos.filter(a => getAlunoStatus(a) === "ATIVO").length;
+    let inadimplentes = alunos.filter(a => getAlunoStatus(a) === "INADIMPLENTE").length;
+    
+    document.getElementById("totalAlunos").innerText = alunos.length;
+    document.getElementById("alunosAtivos").innerText = ativos;
+    document.getElementById("inadimplentes").innerText = inadimplentes;
+    
+    let receitaMes = pagamentos.filter(p => {
+        let data = new Date(p.data);
+        let hoje = new Date();
+        return data.getMonth() === hoje.getMonth() && data.getFullYear() === hoje.getFullYear();
+    }).reduce((sum, p) => sum + p.valor, 0);
+    document.getElementById("receitaMes").innerText = `R$ ${receitaMes.toFixed(0)}`;
+    
+    // Gráfico de Check-ins
+    let diasSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+    let contagem = new Array(7).fill(0);
+    checkins.forEach(c => {
+        let dia = new Date(c.data).getDay();
+        contagem[dia]++;
+    });
+    
+    let ctx1 = document.getElementById("chartCheckins")?.getContext("2d");
+    if (ctx1) {
+        if (charts.chartCheckins) charts.chartCheckins.destroy();
+        charts.chartCheckins = new Chart(ctx1, {
+            type: 'bar',
+            data: { 
+                labels: diasSemana, 
+                datasets: [{ 
+                    label: 'Check-ins', 
+                    data: contagem, 
+                    backgroundColor: '#00ff88', 
+                    borderRadius: 12 
+                }] 
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: true, 
+                plugins: { legend: { labels: { color: document.body.classList.contains('light-mode') ? '#1a1a2e' : '#fff' } } },
+                scales: {
+                    x: { ticks: { color: document.body.classList.contains('light-mode') ? '#64748b' : '#9ca3af' } },
+                    y: { ticks: { color: document.body.classList.contains('light-mode') ? '#64748b' : '#9ca3af' }, beginAtZero: true }
+                }
+            }
+        });
+    }
+    
+    // Gráfico de Planos
+    let planosCount = { 30: 0, 90: 0, 365: 0 };
+    alunos.forEach(a => { if (planosCount[a.plano] !== undefined) planosCount[a.plano]++; });
+    
+    let ctx2 = document.getElementById("chartPlanos")?.getContext("2d");
+    if (ctx2) {
+        if (charts.chartPlanos) charts.chartPlanos.destroy();
+        charts.chartPlanos = new Chart(ctx2, {
+            type: 'doughnut',
+            data: { 
+                labels: ['Mensal', 'Trimestral', 'Anual'], 
+                datasets: [{ 
+                    data: [planosCount[30], planosCount[90], planosCount[365]], 
+                    backgroundColor: ['#00ff88', '#3b82f6', '#f97316'] 
+                }] 
+            },
+            options: { 
+                responsive: true, 
+                plugins: { 
+                    legend: { labels: { color: document.body.classList.contains('light-mode') ? '#1a1a2e' : '#fff' } } 
+                } 
+            }
+        });
+    }
+}
+
+function atualizarGraficoEvolucao() {
+    let nome = document.getElementById("selectAlunoMetrica")?.value;
+    if (!nome) return;
+    
+    let metricasAluno = metricas.filter(m => m.alunoNome === nome).sort((a,b) => new Date(a.data) - new Date(b.data));
+    
+    let ctx = document.getElementById("graficoEvolucao")?.getContext("2d");
+    if (!ctx) return;
+    
+    if (charts.chartEvolucao) charts.chartEvolucao.destroy();
+    
+    if (metricasAluno.length === 0) {
+        document.getElementById("imcInfo").innerHTML = "📊 Selecione um aluno para ver evolução";
+        return;
+    }
+    
+    charts.chartEvolucao = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: metricasAluno.map(m => new Date(m.data).toLocaleDateString('pt-BR')),
+            datasets: [{ 
+                label: 'Peso (kg)', 
+                data: metricasAluno.map(m => m.peso), 
+                borderColor: '#00ff88', 
+                backgroundColor: 'rgba(0,255,136,0.1)', 
+                fill: true, 
+                tension: 0.3, 
+                pointBackgroundColor: '#00ff88' 
+            }]
+        },
+        options: { 
+            responsive: true,
+            scales: {
+                x: { ticks: { color: document.body.classList.contains('light-mode') ? '#64748b' : '#9ca3af' } },
+                y: { ticks: { color: document.body.classList.contains('light-mode') ? '#64748b' : '#9ca3af' } }
+            }
+        }
+    });
+    
+    let ultima = metricasAluno[metricasAluno.length-1];
+    document.getElementById("imcInfo").innerHTML = `📊 IMC: ${ultima.imc} - ${ultima.classificacao} | Peso: ${ultima.peso}kg | Altura: ${ultima.altura}m`;
+}
+
+// ==================== FINANCEIRO ====================
+function gerarRelatorioFinanceiro() {
+    let hoje = new Date();
+    let mesAtual = pagamentos.filter(p => {
+        let data = new Date(p.data);
+        return data.getMonth() === hoje.getMonth() && data.getFullYear() === hoje.getFullYear();
+    });
+    let totalMes = mesAtual.reduce((s, p) => s + p.valor, 0);
+    
+    let porTipo = { dinheiro: 0, cartao: 0, pix: 0, renovacao: 0 };
+    pagamentos.forEach(p => { if (porTipo[p.tipo] !== undefined) porTipo[p.tipo] += p.valor; });
+    
+    document.getElementById("relatorioFinanceiro").innerHTML = `
+        <div class="financial-row"><strong>💰 Receita Mensal:</strong> <span style="color:#00ff88; font-weight:800;">R$ ${totalMes.toFixed(2)}</span></div>
+        <div class="financial-row"><span>💵 Dinheiro:</span> <span>R$ ${porTipo.dinheiro.toFixed(2)}</span></div>
+        <div class="financial-row"><span>💳 Cartão:</span> <span>R$ ${porTipo.cartao.toFixed(2)}</span></div>
+        <div class="financial-row"><span>📱 Pix:</span> <span>R$ ${porTipo.pix.toFixed(2)}</span></div>
+        <div class="financial-row"><span>🔄 Renovações:</span> <span>R$ ${porTipo.renovacao.toFixed(2)}</span></div>
+    `;
+    
+    let historicoHtml = [...pagamentos].reverse().slice(0, 10).map(p => `
+        <div class="financial-row">
+            <span>${new Date(p.data).toLocaleDateString('pt-BR')}</span>
+            <span>${p.alunoNome}</span>
+            <span style="color:#00ff88">R$ ${p.valor.toFixed(2)}</span>
+            <span>${p.tipo}</span>
+        </div>
+    `).join("");
+    document.getElementById("historicoPagamentos").innerHTML = historicoHtml || "<div class='empty-state'>Nenhum pagamento registrado</div>";
+}
+
+// ==================== EXPORTAR PDF ====================
+async function exportarRelatorioPDF() {
+    if (!window.jspdf || !window.html2canvas) {
+        Swal.fire("Aguarde", "Carregando bibliotecas de PDF...", "info");
+        return;
+    }
+    
+    const { jsPDF } = window.jspdf;
+    
+    Swal.fire({
+        title: '📄 Exportar Relatório',
+        html: `
+            <select id="tipoRelatorio" style="width:100%; padding:10px; margin:10px 0; border-radius:12px;">
+                <option value="financeiro">💰 Financeiro</option>
+                <option value="alunos">👥 Lista de Alunos</option>
+                <option value="checkins">🔐 Check-ins do Mês</option>
+            </select>
+        `,
+        confirmButtonText: 'Gerar PDF',
+        showCancelButton: true,
+        preConfirm: () => {
+            return document.getElementById('tipoRelatorio').value;
+        }
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            const tipo = result.value;
+            Swal.fire({ title: 'Gerando PDF...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            
+            try {
+                let elemento, titulo;
+                
+                if (tipo === 'financeiro') {
+                    elemento = document.getElementById('relatorioFinanceiro');
+                    titulo = 'Relatório Financeiro';
+                } else if (tipo === 'alunos') {
+                    elemento = document.getElementById('listaAlunosContainer');
+                    titulo = 'Lista de Alunos';
+                } else {
+                    // Criar elemento temporário para check-ins
+                    elemento = document.createElement('div');
+                    elemento.innerHTML = checkins.filter(c => {
+                        const d = new Date(c.data);
+                        return d.getMonth() === new Date().getMonth();
+                    }).map(c => `
+                        <div style="padding:8px 0; border-bottom:1px solid #eee;">
+                            ${c.alunoNome} - ${new Date(c.data).toLocaleString('pt-BR')}
+                        </div>
+                    `).join('') || 'Nenhum check-in este mês';
+                    titulo = 'Check-ins do Mês';
+                }
+                
+                const canvas = await html2canvas(elemento, { 
+                    scale: 2, 
+                    backgroundColor: document.body.classList.contains('light-mode') ? '#ffffff' : '#0a0f2a',
+                    logging: false 
+                });
+                
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 190;
+                const pageHeight = 297;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                pdf.setFontSize(16);
+                pdf.text(`${APP.name} - ${titulo}`, 105, 15, { align: 'center' });
+                pdf.setFontSize(10);
+                pdf.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 105, 22, { align: 'center' });
+                
+                pdf.addImage(imgData, 'PNG', 10, 30, imgWidth, imgHeight);
+                pdf.save(`${APP.name.replace(/\s/g, '_')}_${tipo}_${new Date().toISOString().slice(0,10)}.pdf`);
+                
+                Swal.fire('Exportado!', 'Relatório PDF gerado com sucesso.', 'success');
+            } catch (err) {
+                console.error(err);
+                Swal.fire('Erro', 'Não foi possível gerar o PDF. Tente novamente.', 'error');
+            }
+        }
+    });
+}
+
+// ==================== BACKUP ====================
+function fazerBackup() {
+    const dados = {
+        alunos, treinos, metricas, checkins, pagamentos, profissional,
+        timestamp: new Date().toISOString(),
+        versao: APP.version,
+        usuario: usuarioLogado?.nome || 'guest'
+    };
+    
+    const blob = new Blob([JSON.stringify(dados, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `gym_backup_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    Swal.fire('Backup!', 'Arquivo baixado. Guarde em local seguro!', 'success');
+}
+
+// ==================== PROFISSIONAL ====================
+function salvarProfissional() {
+    let nome = document.getElementById("profissionalNome").value.trim();
+    let cref = document.getElementById("profissionalCref").value.trim();
+    if (!nome || !cref) {
+        Swal.fire("Atenção", "Preencha nome e número do CREF", "warning");
+        return;
+    }
+    profissional = { nome, cref };
+    APP.storage.set('profissional', profissional);
+    document.getElementById("infoProfissional").innerHTML = `<i class="fas fa-check-circle" style="color:#00ff88"></i> Responsável: ${nome} (CREF: ${cref})`;
+    Swal.fire("Registrado!", `Responsável técnico ${nome} registrado com sucesso!`, "success");
+}
+
+function carregarProfissional() {
+    if (profissional.nome) {
+        document.getElementById("infoProfissional").innerHTML = `<i class="fas fa-check-circle" style="color:#00ff88"></i> Responsável: ${profissional.nome} (CREF: ${profissional.cref})`;
+        document.getElementById("profissionalNome").value = profissional.nome;
+        document.getElementById("profissionalCref").value = profissional.cref;
+    }
+}
+
+// ==================== ALERTAS ====================
+function gerarAlertas() {
+    let hoje = new Date();
+    hoje.setUTCHours(0,0,0,0);
+    let alertas = [];
+    
+    alunos.forEach(aluno => {
+        let venc = parseDateSafe(aluno.vencimento);
+        let diff = Math.ceil((venc - hoje) / 86400000);
+        if (venc < hoje) alertas.push({ tipo: 'vencido', nome: aluno.nome });
+        else if (diff <= 7 && diff > 0) alertas.push({ tipo: 'proximo', nome: aluno.nome, dias: diff });
+    });
+    
+    let container = document.getElementById("alertContainer");
+    if (alertas.length === 0) { 
+        container.innerHTML = `<div class="card" style="background:rgba(0,255,136,0.08); text-align:center; border-color:#00ff88;">✅ Todos os planos em dia!</div>`; 
+        return; 
+    }
+    
+    container.innerHTML = alertas.map(a => a.tipo === 'vencido' 
+        ? `<div class="alert-card"><i class="fas fa-exclamation-triangle"></i> ⚠️ ${a.nome} - Plano VENCIDO! Acesso bloqueado.</div>` 
+        : `<div class="alert-card alert-warning"><i class="fas fa-clock"></i> ⏰ ${a.nome} - Vence em ${a.dias} dias!</div>`
+    ).join("");
+    
+    // Notificar sobre vencimentos próximos
+    if (Notification.permission === 'granted') {
+        alertas.filter(a => a.tipo === 'proximo').forEach(a => {
+            new Notification(`⚠️ Plano vencendo em ${a.dias} dias`, {
+                body: `${a.nome} - Lembre-se de renovar!`,
+                icon: 'https://via.placeholder.com/128/f97316/ffffff?text=!'
+            });
+        });
+    }
+}
+
+// ==================== RENDER GERAL ====================
+function renderizarSelects() {
+    const opts = alunos.length > 0 
+        ? alunos.map(a => `<option value="${a.nome}">${a.nome} (${getAlunoStatus(a) === "ATIVO" ? "✅" : "🔴"})</option>`).join("")
+        : '<option value="">Nenhum aluno cadastrado</option>';
+    
+    ['selectAlunoTreino', 'selectAlunoMetrica', 'selectCheckinAluno'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = opts;
+    });
+}
+
+function mudarTela(tela) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(`${tela}Section`)?.classList.add('active');
+    
+    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.nav-item[data-tela="${tela}"]`)?.classList.add('active');
+    
+    if (tela === 'financeiro') gerarRelatorioFinanceiro();
+    if (tela === 'metricas') atualizarGraficoEvolucao();
+    
+    renderizarTudo();
+}
+
+function renderizarTudo() {
+    renderizarAlunos();
+    renderizarTreinos();
+    renderizarSelects();
+    renderizarCheckins();
+    atualizarDashboard();
+    gerarAlertas();
+}
+
+// ==================== TEMA ====================
+function alternarTema() {
+    document.body.classList.toggle('light-mode');
+    const tema = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+    localStorage.setItem('gym_tema', tema);
+    
+    const btn = document.getElementById('btnTema');
+    btn.innerHTML = tema === 'light' 
+        ? '<i class="fas fa-moon"></i>' 
+        : '<i class="fas fa-sun"></i>';
+    
+    // Atualizar gráficos com novas cores
+    atualizarDashboard();
+    if (document.getElementById('metricasSection').classList.contains('active')) {
+        atualizarGraficoEvolucao();
+    }
+}
+
+// ==================== AJUDA ====================
+function mostrarAjuda() {
+    Swal.fire({
+        title: '📚 Como Usar o GYM PRO ELITE',
+        html: `
+            <div style="text-align:left; font-size:0.9rem; line-height:1.6; color:${document.body.classList.contains('light-mode') ? '#1a1a2e' : '#fff'}">
+                <strong>🔐 Primeiro Acesso:</strong><br>
+                • Vá em "CREF" e cadastre o responsável técnico<br><br>
+                
+                <strong>👥 Cadastrar Aluno:</strong><br>
+                • Preencha nome, CPF (11 números) e contato<br>
+                • Escolha o plano: Mensal (R$120), Trimestral (R$320) ou Anual (R$1200)<br><br>
+                
+                <strong>🔐 Check-in:</strong><br>
+                • Aluno só entra se plano estiver ativo<br>
+                • Apenas 1 check-in por dia permitido<br><br>
+                
+                <strong>💰 Financeiro:</strong><br>
+                • Clique em "Atualizar Relatório" para ver receitas do mês<br>
+                • Use o botão 📄 para exportar PDF<br><br>
+                
+                <strong>⚠️ Alertas:</strong><br>
+                • Vermelho: Plano vencido - acesso bloqueado<br>
+                • Laranja: Vence em até 7 dias - renovar!<br><br>
+                
+                <strong>⌨️ Atalhos:</strong><br>
+                • Ctrl+N: Novo aluno • Ctrl+F: Buscar • Esc: Dashboard
+            </div>
+        `,
+        confirmButtonText: 'Entendi!',
+        width: '600px',
+        background: document.body.classList.contains('light-mode') ? '#fff' : '#0f192d'
+    });
+}
+
+// ==================== LOGIN SIMPLIFICADO ====================
+const USUARIOS = [
+    { nome: 'Admin', pin: '1234', nivel: 'admin' },
+    { nome: 'Recepcao', pin: '5678', nivel: 'operador' }
+];
+
+function mostrarLogin() {
+    Swal.fire({
+        title: '🔐 Acesso Restrito',
+        html: `
+            <input type="text" id="loginNome" class="swal2-input" placeholder="Nome de usuário" value="Admin">
+            <input type="password" id="loginPin" class="swal2-input" placeholder="PIN (4 dígitos)" maxlength="4" value="1234">
+        `,
+        confirmButtonText: 'Entrar',
+        showCancelButton: true,
+        cancelButtonText: 'Acesso Rápido',
+        preConfirm: () => {
+            const nome = document.getElementById('loginNome').value;
+            const pin = document.getElementById('loginPin').value;
+            const user = USUARIOS.find(u => u.nome === nome && u.pin === pin);
+            if (!user) {
+                Swal.showValidationMessage('Usuário ou PIN inválido');
+                return false;
+            }
+            return user;
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            usuarioLogado = result.value;
+            localStorage.setItem('gym_usuario', JSON.stringify(usuarioLogado));
+            aplicarPermissoes();
+            renderizarTudo();
+            Swal.fire('Bem-vindo!', `Olá, ${usuarioLogado.nome}!`, 'success');
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Acesso como guest
+            usuarioLogado = { nome: 'Guest', nivel: 'guest' };
+            localStorage.setItem('gym_usuario', JSON.stringify(usuarioLogado));
+            aplicarPermissoes();
+            renderizarTudo();
+        }
+    });
+}
+
+function aplicarPermissoes() {
+    const badge = document.getElementById('userBadge');
+    const nameSpan = document.getElementById('userName');
+    
+    if (usuarioLogado) {
+        badge.style.display = 'flex';
+        nameSpan.textContent = usuarioLogado.nome;
+    }
+    
+    // Esconder funcionalidades admin para operadores/guests
+    const isAdmin = usuarioLogado?.nivel === 'admin';
+    document.querySelectorAll('.admin-only').forEach(el => {
+        el.style.display = isAdmin ? '' : 'none';
+    });
+}
+
+// ==================== NOTIFICAÇÕES ====================
+function solicitarNotificacoes() {
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+}
+
+// ==================== ATALHOS DE TECLADO ====================
+document.addEventListener('keydown', (e) => {
+    // Ignar se estiver digitando em input
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+    
+    // Ctrl + N = Novo aluno
+    if (e.ctrlKey && e.key.toLowerCase() === 'n') {
+        e.preventDefault();
+        mudarTela('alunos');
+        document.getElementById('nomeAluno')?.focus();
+    }
+    // Ctrl + F = Buscar
+    if (e.ctrlKey && e.key.toLowerCase() === 'f') {
+        e.preventDefault();
+        document.getElementById('buscaAluno')?.focus();
+    }
+    // Escape = Voltar ao dashboard
+    if (e.key === 'Escape') {
+        mudarTela('home');
+    }
+    // Ctrl + B = Backup
+    if (e.ctrlKey && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        fazerBackup();
+    }
+});
+
+// ==================== SERVICE WORKER (PWA) ====================
+if ('serviceWorker' in navigator) {
+    // Registro simplificado - em produção, criar arquivo sw.js separado
+    console.log('💡 Dica: Para PWA completo, registre um service worker externo');
+}
+
+// ==================== INICIALIZAÇÃO ====================
+document.addEventListener('DOMContentLoaded', () => {
+    // Aplicar tema salvo
+    if (localStorage.getItem('gym_tema') === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('btnTema').innerHTML = '<i class="fas fa-moon"></i>';
+    }
+    
+    // Carregar profissional
+    carregarProfissional();
+    
+    // Limpar dados antigos
+    limparDadosAntigos();
+    
+    // Solicitar notificações
+    solicitarNotificacoes();
+    
+    // Verificar login
+    if (usuarioLogado) {
+        aplicarPermissoes();
+    } else {
+        mostrarLogin();
+    }
+    
+    // Renderizar tudo
+    renderizarTudo();
+    
+    // Atualizar relatórios se na seção financeira
+    if (document.getElementById('financeiroSection')?.classList.contains('active')) {
+        gerarRelatorioFinanceiro();
+    }
+    
+    // Console info
+    console.log(`✅ ${APP.name} v${APP.version} carregado!`);
+    console.log('💡 Use Ctrl+H para ajuda, Ctrl+B para backup');
+    
+    // Tratamento global de erros
+    window.addEventListener('error', (e) => {
+        console.error('❌ Erro:', e.message);
+    });
+});
+
+// Registrar service worker para PWA (inline para arquivo único)
+if ('serviceWorker' in navigator) {
+    const swCode = `
+        const CACHE = 'gym-pro-v${APP.version}';
+        self.addEventListener('install', e => {
+            e.waitUntil(caches.open(CACHE).then(cache => cache.addAll([
+                '/', '/index.html'
+            ])));
+        });
+        self.addEventListener('fetch', e => {
+            e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
+        });
+    `;
+    const blob = new Blob([swCode], {type: 'application/javascript'});
+    const swUrl = URL.createObjectURL(blob);
+    // Nota: em produção, use um arquivo sw.js real na raiz
+}
+</script>
+
+<!-- PWA Manifest (inline via data URL) -->
+<link rel="manifest" href="data:application/manifest+json,{
+    &quot;name&quot;:&quot;GYM PRO ELITE&quot;,
+    &quot;short_name&quot;:&quot;GymPro&quot;,
+    &quot;start_url&quot;:&quot;.&quot;,
+    &quot;display&quot;:&quot;standalone&quot;,
+    &quot;background_color&quot;:&quot;#0a0f2a&quot;,
+    &quot;theme_color&quot;:&quot;#00ff88&quot;,
+    &quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;rect width='100' height='100' rx='20' fill='%2300ff88'/&gt;&lt;text x='50' y='65' font-size='50' text-anchor='middle' fill='%230a0f2a'&gt;💪&lt;/text&gt;&lt;/svg&gt;&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]
+}">
+
 </body>
 </html>
